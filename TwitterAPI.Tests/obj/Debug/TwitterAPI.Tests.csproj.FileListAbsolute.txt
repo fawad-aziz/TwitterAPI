@@ -53,3 +53,11 @@ C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\WebApi.Structu
 C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\StructureMap.Net4.pdb
 C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\obj\Debug\TwitterAPI.Tests.dll
 C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\obj\Debug\TwitterAPI.Tests.pdb
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\Castle.Core.dll
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\Moq.dll
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\System.ValueTuple.dll
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\Castle.Core.xml
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\Moq.pdb
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\Moq.xml
+C:\Users\faziz\source\repos\TwitterAPI\TwitterAPI.Tests\bin\Debug\System.Threading.Tasks.Extensions.xml
