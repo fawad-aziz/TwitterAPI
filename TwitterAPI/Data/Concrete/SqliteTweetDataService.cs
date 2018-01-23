@@ -6,22 +6,26 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TwitterAPI.Helper;
 
 namespace TwitterAPI.Data.Concrete
 {
     public class SqliteTweetDataService : ITweetDataService
     {
-        public SqliteTweetDataService() { }
+        private readonly IDataContext _context;
+
+        public SqliteTweetDataService(IDataContext context)
+        {
+            Guard.ArgumentNotNull(context, nameof(context));
+            _context = context;
+        }
 
         public async Task<List<Tweet>> GetCurrentTweets()
         {
             try
             {
-                using (var db = new FullDbContext())
-                {
-                    var tweets = await db.Tweets.Where(t => t.IsCurrent == true).ToListAsync();
-                    return tweets;
-                }
+                var tweets = await _context.Set<Tweet>().Where(t => t.IsCurrent == true).ToListAsync();
+                return tweets;
             }
             catch (Exception ex)
             {
@@ -32,60 +36,53 @@ namespace TwitterAPI.Data.Concrete
 
         public async Task<List<Tweet>> UpdateTweets(List<Tweet> tweets)
         {
-            using (var db = new FullDbContext())
+            using (var dbTran = _context.Database.BeginTransaction())
             {
-                using (var dbTran = db.Database.BeginTransaction())
+                try
                 {
-                    try
+                    foreach (var tweet in _context.Set<Tweet>())
                     {
-                        foreach (var tweet in db.Tweets)
-                        {
-                            tweet.IsCurrent = false;
-                        }
-
-                        foreach (var tweet in tweets)
-                        {
-                            tweet.IsCurrent = true;
-                            db.Tweets.Add(tweet);
-                        }
-
-                        await db.SaveChangesAsync();
-                        dbTran.Commit();
-
-                        tweets = await db.Tweets.ToListAsync();
+                        tweet.IsCurrent = false;
                     }
-                    catch (Exception ex)
+
+                    foreach (var tweet in tweets)
                     {
-                        dbTran.Rollback();
-                        Trace.Write(ex, nameof(GetCurrentTweets));
-                        throw;
+                        tweet.IsCurrent = true;
+                        _context.Set<Tweet>().Add(tweet);
                     }
+
+                    await _context.SaveChangesAsync();
+                    dbTran.Commit();
                 }
-
-                using (var dbTran = db.Database.BeginTransaction())
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        foreach (var tweet in db.Tweets.Where(t => t.IsCurrent == false))
-                        {
-                            db.Tweets.Remove(tweet);
-                        }
-
-                        await db.SaveChangesAsync();
-                        dbTran.Commit();
-
-                        tweets = await db.Tweets.ToListAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        dbTran.Rollback();
-                        Trace.Write(ex, nameof(GetCurrentTweets));
-                        throw;
-                    }
+                    dbTran.Rollback();
+                    Trace.Write(ex, nameof(GetCurrentTweets));
+                    throw;
                 }
-
-                return tweets;
             }
+
+            using (var dbTran = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var tweet in _context.Set<Tweet>().Where(t => t.IsCurrent == false))
+                    {
+                        _context.Set<Tweet>().Remove(tweet);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    dbTran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    dbTran.Rollback();
+                    Trace.Write(ex, nameof(GetCurrentTweets));
+                    throw;
+                }
+            }
+
+            return tweets;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using StructureMap;
 using StructureMap.Graph;
+using System;
+using TwitterAPI.Data;
 using TwitterAPI.Data.Concrete;
 using TwitterAPI.Data.Contracts;
 using TwitterAPI.Models.Entities;
@@ -29,8 +31,10 @@ namespace TwitterAPI.DependencyResolution
             var mapper = mapperConfig.CreateMapper();
 
             For<IMapper>().Use(mapper);
+            For<IDataContext>().Use<FullDbContext>();
             For<ITweetDataService>().Use<SqliteTweetDataService>();
             For<ITweetService>().Use<TweetService>().Ctor<IMapper>().Is(mapper);
+            //For<IDisposable>().Add<FullDbContext>();
         }
     }
 }

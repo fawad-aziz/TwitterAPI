@@ -214,8 +214,11 @@
     <Compile Include="Controllers\TweetController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Data\Concrete\SqliteTweetDataService.cs" />
+    <Compile Include="Data\Contracts\IDataContext.cs" />
+    <Compile Include="Data\Contracts\IFullContextDbMapping.cs" />
     <Compile Include="Data\Contracts\ITweetDataService.cs" />
     <Compile Include="Data\FullDbContext.cs" />
+    <Compile Include="Data\Maps\TweetMap.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
